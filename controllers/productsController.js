@@ -1,5 +1,5 @@
 import Product from '../models/productModel.js';
-import User from '../models/userModel.js';
+import Store from '../models/storeModel.js';
 
 // POST /api/products → Create a new product (Admin/Store)
 export const createProduct = async (req, res) => {
@@ -10,16 +10,16 @@ export const createProduct = async (req, res) => {
       return res.status(400).json({ message: "Name, price, and quantity are required" });
     }
 
-    // Fetch the authenticated user from the database
-    const user = await User.findById(req.user.storeId); // Assuming the user ID is linked to the store
+    // Fetch the authenticated store from the database
+    const store = await Store.findById(req.userId);
 
-    // Ensure the user exists and is a store owner
-    if (user.userType !== "Store") {
+    // Ensure the store exists
+    if (!store) {
       return res.status(403).json({ message: "Unauthorized: Only store owners can create products" });
     }
 
-    // Extract store details (assuming store ID is linked to the user)
-    const storeId = user.storeId; // Use user's ID as storeId if no separate Store model
+    // Use store's ID as storeId
+    const storeId = req.userId;
 
     // Create the product with the storeId
     const newProduct = new Product({
@@ -119,16 +119,13 @@ export const createProducts = async (req, res) => {
       return res.status(400).json({ message: "Invalid input: Expecting an array of products" });
     }
 
-    // Fetch the authenticated user from the database
-    const user = await User.findById(storeId); // Assuming the user ID is linked to the store
+    // Fetch the authenticated store from the database
+    const store = await Store.findById(storeId);
 
-    // Ensure the user exists and is a store owner
-    if (!user || user.userType !== "Store") {
+    // Ensure the store exists
+    if (!store) {
       return res.status(403).json({ message: "Unauthorized: Only store owners can create products" });
     }
-
-    // Extract store details (assuming store ID is linked to the user)
-    // const storeId = user.storeId;
 
     // Validate each product object
     const validProducts = products.filter(product => 
@@ -214,9 +211,8 @@ export const getAllProductsForAdmin = async (req, res) => {
 
     const storeIds = [...new Set(products.map((p) => p.storeId?.toString()))].filter(Boolean);
 
-    const storeUsers = await User.find({
+    const storeUsers = await Store.find({
       _id: { $in: storeIds },
-      userType: "Store",
     }).select("_id name storeDetails");
 
     const storeMap = {};

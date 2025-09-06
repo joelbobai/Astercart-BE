@@ -1,12 +1,12 @@
 import Order from "../../models/orderModel.js";
-import User from "../../models/userModel.js";
-import { totalStoresFunction, getStoreGraphValues } from "../../utils/adminHelpers/totalstores.js"
+import Store from "../../models/storeModel.js";
+import { totalStoresFunction, getStoreGraphValues } from "../../utils/adminHelpers/totalstores.js";
 import Payment from "../../models/paymentModel.js";
 
 // Get all stores with essential details
 export const getAllRegStores = async (req, res) => {
   try {
-    const stores = await User.find({ userType: "Store" }).select(
+    const stores = await Store.find().select(
       "_id name email storeDetails status createdAt"
     );
 
@@ -32,7 +32,7 @@ export const getAllRegStores = async (req, res) => {
 // Block a store (sets status to 'inactive')
 export const blockStore = async (req, res) => {
   try {
-    const store = await User.findByIdAndUpdate(
+    const store = await Store.findByIdAndUpdate(
       req.params.id,
       { status: "inactive" },
       { new: true }
@@ -50,7 +50,7 @@ export const blockStore = async (req, res) => {
 
 export const unblockStore = async (req, res) => {
   try {
-    const store = await User.findByIdAndUpdate(
+    const store = await Store.findByIdAndUpdate(
       req.params.id,
       { status: "active" },
       { new: true }
@@ -74,11 +74,11 @@ export const getTopVisitedStores = async (req, res) => {
       { $sort: { totalOrders: -1 } },
       { 
         $lookup: { 
-          from: "users", 
-          localField: "_id", 
-          foreignField: "_id", 
-          as: "storeDetails" 
-        } 
+          from: "stores",
+          localField: "_id",
+          foreignField: "_id",
+          as: "storeDetails"
+        }
       },
       { $unwind: { path: "$storeDetails", preserveNullAndEmptyArrays: true } },
       { 
@@ -108,11 +108,11 @@ export const getTopStoresByLocation = async (req, res) => {
       { $sort: { orderCount: -1 } },
       { 
         $lookup: { 
-          from: "users", 
-          localField: "_id", 
-          foreignField: "_id", 
-          as: "storeDetails" 
-        } 
+          from: "stores",
+          localField: "_id",
+          foreignField: "_id",
+          as: "storeDetails"
+        }
       },
       { $unwind: { path: "$storeDetails", preserveNullAndEmptyArrays: true } },
       { 
@@ -137,8 +137,8 @@ export const getTopStoresByLocation = async (req, res) => {
 
 export const getStoreStats = async (req, res) => {
   try {
-    // Find all stores (saved as users)
-    const stores = await User.find({ userType: "Store" }).select("createdAt status");
+    // Find all stores
+    const stores = await Store.find().select("createdAt status");
 
     console.log("Fetched Stores from DB:", stores.length);
 
@@ -196,8 +196,8 @@ export const getStoreById = async (req, res) => {
   try {
     const { storeId } = req.params;
 
-    // Find store inside USER collection where _id = storeId and userType = Store
-    const store = await User.findOne({ _id: storeId, userType: "Store" }).select("name address state");
+    // Find store by ID
+    const store = await Store.findById(storeId).select("name storeDetails.address storeDetails.state");
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
@@ -218,8 +218,8 @@ export const getSoldOrdersByStore = async (req, res) => {
       return res.status(400).json({ message: "Store ID is required" });
     }
 
-    // Find the store by ID and userType
-    const store = await User.findOne({ _id: storeId, userType: "Store" }).select("name");
+    // Find the store by ID
+    const store = await Store.findById(storeId).select("name");
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });

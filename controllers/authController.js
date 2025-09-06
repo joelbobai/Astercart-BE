@@ -38,6 +38,12 @@ export const signup = async (req, res) => {
   try {
     let { email, password, userType, ...rest } = req.body;
 
+    if (userType === "Store") {
+      return res
+        .status(400)
+        .json({ message: "Use /signup/store for store registration" });
+    }
+
     email = email.toLowerCase();
 
     // Check if email already exists
@@ -118,6 +124,12 @@ export const login = async (req, res) => {
   try {
     let { email, password, userType } = req.body;
     email = email.toLowerCase();
+
+    if (userType === "Store") {
+      return res
+        .status(400)
+        .json({ message: "Use /store/login for store accounts" });
+    }
 
     // Find user
     const user = await User.findOne({ email });

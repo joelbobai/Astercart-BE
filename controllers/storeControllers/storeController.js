@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import Transaction from "../../models/transactionModel.js";
-import User from "../../models/userModel.js";
 import bcrypt from "bcrypt";
 import Product from "../../models/productModel.js";
 import Store from "../../models/storeModel.js";
