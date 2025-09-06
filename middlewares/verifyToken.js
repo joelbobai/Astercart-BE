@@ -20,7 +20,7 @@ export const verifyToken = (req, res, next) => {
 
     // Add the decoded user ID to the request object for further use in routes or middleware
     req.userId = decoded.id;
-    // req.userType = decoded.userType;
+    req.userType = decoded.userType;
     next();
   } catch (error) {
     console.error("Token verification failed:", error); // Log the error for debugging
