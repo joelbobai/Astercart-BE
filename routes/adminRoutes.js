@@ -14,7 +14,7 @@ import {
   markNotificationAsRead,
   markAllNotificationsAsRead
 } from "../controllers/AdminControllers/adminController.js";
-import { restrictFlaggedAdmin, verifyToken } from "../middleware/verifyToken.js";
+import { restrictFlaggedAdmin, verifyToken } from "../middlewares/verifyToken.js";
 
 const router = express.Router();
 

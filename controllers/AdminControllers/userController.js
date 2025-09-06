@@ -1,5 +1,5 @@
 import User from "../../models/userModel.js";
-import { getGraphValues, totalUsersFunction } from "../../util/adminHelpers/totalusers.js";
+import { getGraphValues, totalUsersFunction } from "../../utils/adminHelpers/totalusers.js";
 
 // ✅ Get all customers
 export const getAllCustomers = async (req, res) => {

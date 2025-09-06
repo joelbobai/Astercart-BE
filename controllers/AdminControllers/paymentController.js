@@ -1,5 +1,5 @@
 import Payment from '../../models/paymentModel.js';
-import { totalPaymentFunction } from "../../util/adminHelpers/paymentstats.js";
+import { totalPaymentFunction } from "../../utils/adminHelpers/paymentstats.js";
 
 export const createPayment = async (req, res) => {
   try {

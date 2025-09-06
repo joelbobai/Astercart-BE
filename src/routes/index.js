@@ -1,9 +1,0 @@
-export { default as adminAuthRoutes } from './adminAuthRoutes.js';
-export { default as adminCustomerRoute } from './adminCustomerRoute.js';
-export { default as adminOrderRoute } from './adminOrderRoute.js';
-export { default as adminRoutes } from './adminRoutes.js';
-export { default as authRoutes } from './authRoutes.js';
-export { default as dashboardRoutes } from './dashboardRoutes.js';
-export { default as paymentRoute } from './paymentRoute.js';
-export { default as promoRoute } from './promoRoute.js';
-export { default as storeRoutes } from './storeRoutes.js';

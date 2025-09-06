@@ -1,22 +1,20 @@
 import express from "express";
 import dotenv from "dotenv";
-import {
-  authRoutes,
-  storeRoutes,
-  adminCustomerRoute,
-  adminOrderRoute,
-  adminRoutes,
-  adminAuthRoutes,
-  promoRoute,
-  paymentRoute,
-  dashboardRoutes,
-} from "./src/routes/index.js";
-import { connectDB } from "./src/config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import storeRoutes from "./routes/storeRoutes.js";
+import { connectDB } from "./db.js";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
-import Store from "./src/models/storeModel.js";
-import Product from "./src/models/productModel.js";
-import { deactivateExpiredPromos } from "./src/controllers/AdminControllers/promoController.js";
+import Store from "./models/storeModel.js";
+import Product from "./models/productModel.js";
+import adminCustomerRoute from "./routes/adminCustomerRoute.js";
+import adminOrderRoute from "./routes/adminOrderRoute.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import adminAuthRoutes from "./routes/adminAuthRoutes.js";
+import promoRoute from "./routes/promoRoute.js";
+import paymentRoute from "./routes/paymentRoute.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+import { deactivateExpiredPromos } from "./controllers/AdminControllers/promoController.js";
 import cron from "node-cron";
 
 // Load environment variables

@@ -1,9 +1,9 @@
 import User from "../../models/userModel.js";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { AdminUrl } from "../../util/constants.js";
-import { sendNewAdmin } from "../../util/mailsender/emails.js";
-import { sendAdminNotification } from "../../util/notificationHelper.js";
+import { AdminUrl } from "../../utils/constants.js";
+import { sendNewAdmin } from "../../utils/mailsender/emails.js";
+import { sendAdminNotification } from "../../utils/notificationHelper.js";
 import Notification from "../../models/notificationModel.js";
 import AdminNotification from "../../models/adminNotificationModel.js";
 
