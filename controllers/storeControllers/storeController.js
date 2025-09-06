@@ -13,45 +13,56 @@ export const getStoreDetails = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized access" });
     }
 
-    // Aggregate summary data
-    const summary = await Transaction.aggregate([
-      { $match: { storeId: new mongoose.Types.ObjectId(storeId) } }, // Filter by store ID
+    // Aggregate transaction summary data
+    const transactionSummary = await Transaction.aggregate([
+      { $match: { storeId: new mongoose.Types.ObjectId(storeId) } },
       {
         $group: {
           _id: null,
-          totalTransactions: { $sum: 1 }, // Count total transactions matching the store ID
-          totalStockItems: { $sum: { $sum: "$products.quantity" } }, // Total quantity of items sold
-          totalItemsLeftInStock: { $sum: 0 }, // Placeholder (requires a Product model or other logic)
-          totalItemsOutOfStock: { $sum: 0 }, // Placeholder (requires a Product model or other logic)
-          totalSoldItems: { $sum: { $sum: "$products.quantity" } }, // Total sold items
-          totalOrderSales: { $sum: "$totalAmount" }, // Total sales amount
-          totalFeesCharged: { $sum: "$fee" }, // Total fees collected
-
+          totalTransactions: { $sum: 1 },
+          totalStockItems: { $sum: { $sum: "$products.quantity" } },
+          totalSoldItems: { $sum: { $sum: "$products.quantity" } },
+          totalOrderSales: { $sum: "$totalAmount" },
+          totalFeesCharged: { $sum: "$fee" },
           completedOrders: {
-            $sum: {
-              $cond: [{ $eq: ["$status", "completed"] }, 1, 0],
-            },
+            $sum: { $cond: [{ $eq: ["$status", "completed"] }, 1, 0] },
           },
           pendingOrders: {
-            $sum: {
-              $cond: [{ $eq: ["$status", "pending"] }, 1, 0],
-            },
+            $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] },
           },
           failedOrders: {
-            $sum: {
-              $cond: [{ $eq: ["$status", "failed"] }, 1, 0],
-            },
+            $sum: { $cond: [{ $eq: ["$status", "failed"] }, 1, 0] },
+          },
+        },
+      },
+    ]);
+
+    // Aggregate product inventory data
+    const inventorySummary = await Product.aggregate([
+      { $match: { storeId: new mongoose.Types.ObjectId(storeId) } },
+      {
+        $group: {
+          _id: null,
+          totalItemsLeftInStock: { $sum: "$quantity" },
+          totalItemsOutOfStock: {
+            $sum: { $cond: [{ $eq: ["$quantity", 0] }, 1, 0] },
           },
         },
       },
     ]);
 
     const storeProfile = await Store.findById(storeId).select("-password");
-    // const transactions = await Transaction.find({storeId: new mongoose.Types.ObjectId(storeId)});
+    const transactions = await Transaction.find({
+      storeId: new mongoose.Types.ObjectId(storeId),
+    });
+
+    const { _id: _tId, ...tSummary } = transactionSummary[0] || {};
+    const { _id: _iId, ...iSummary } = inventorySummary[0] || {};
+
     res.json({
-      // summary: summary[0] || {},
+      summary: { ...tSummary, ...iSummary },
       storeProfile: storeProfile || {},
-      // transactions: transactions || [], // Placeholder (requires additional logic to fetch transaction details)
+      transactions: transactions || [],
     });
   } catch (error) {
     console.error(error);
