@@ -9,11 +9,9 @@ import Store from "../../models/storeModel.js";
 export const getStoreDetails = async (req, res) => {
   try {
     const { userId: storeId, userType } = req;
-    console.log(storeId);
-
-    // if (userType !== "Store") {
-    //   return res.status(403).json({ message: "Unauthorized access" });
-    // }
+    if (userType !== "Store") {
+      return res.status(403).json({ message: "Unauthorized access" });
+    }
 
     // Aggregate summary data
     const summary = await Transaction.aggregate([
@@ -64,10 +62,12 @@ export const getStoreDetails = async (req, res) => {
 };
 // Get Store Dashboard Data
 export const updateStoreProfile = async (req, res) => {
-  console.log("I Got Here");
-
   try {
     const { userId: storeId, userType } = req;
+    if (userType !== "Store") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
     const {
       phoneNumber,
       password,
@@ -81,10 +81,6 @@ export const updateStoreProfile = async (req, res) => {
       lga,
       profilePhoto,
     } = req.body;
-
-    // if (userType !== "Store") {
-    //   return res.status(403).json({ message: "Forbidden" });
-    // }
 
     const storeProfile = await Store.findById(storeId);
 
@@ -112,7 +108,6 @@ export const updateStoreProfile = async (req, res) => {
       storeProfile.password = hashedPassword;
     }
     const updatedStoreProfile = await storeProfile.save();
-    console.log(updatedStoreProfile);
 
     res.status(200).json({
       message: "Store profile updated successfully",
@@ -128,19 +123,19 @@ export const updateStoreProfile = async (req, res) => {
 
 export const changeStorePassword = async (req, res) => {
   try {
-    const { userId: storeId } = req;
+    const { userId: storeId, userType } = req;
     const { oldPassword, newPassword } = req.body;
+    if (userType !== "Store") {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized: Not a store user" });
+    }
 
     // Check if the user is authenticated
     const storeUser = await Store.findById(storeId);
-
-    // if (storeUser.userType !== "Store") {
-    //   return res
-    //     .status(403)
-    //     .json({ message: "Unauthorized: Not a store user" });
-    // }
-
-    console.log(storeUser);
+    if (!storeUser) {
+      return res.status(404).json({ message: "Store not found" });
+    }
 
     // Check if the old password matches the stored hash
     const isMatch = await bcrypt.compare(oldPassword, storeUser.password);
@@ -163,7 +158,11 @@ export const changeStorePassword = async (req, res) => {
 export const updateStoreNotifications = async (req, res) => {
   try {
     const { notificationPreferences } = req.body;
-    const { userId: storeId } = req;
+    const { userId: storeId, userType } = req;
+
+    if (userType !== "Store") {
+      return res.status(403).json({ message: "Unauthorized access" });
+    }
 
     if (!notificationPreferences) {
       return res.status(400).json({ message: "Invalid request data." });
@@ -188,7 +187,10 @@ export const updateStoreNotifications = async (req, res) => {
 
 export const getStoreProducts = async (req, res) => {
   try {
-    const { userId: storeId } = req;
+    const { userId: storeId, userType } = req;
+    if (userType !== "Store") {
+      return res.status(403).json({ message: "Unauthorized access" });
+    }
     const products = await Product.find({
       storeId: new mongoose.Types.ObjectId(storeId),
     });
