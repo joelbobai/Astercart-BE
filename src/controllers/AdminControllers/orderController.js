@@ -1,6 +1,6 @@
 // controllers/orderController.js
 import Order from "../../models/orderModel.js";
-import { totalOrdersFunction } from "../../utils/adminHelpers/orderstat.js";
+import { totalOrdersFunction } from "../../util/adminHelpers/orderstat.js";
 
 export const getAllOrdersForAdmin = async (req, res) => {
   try {

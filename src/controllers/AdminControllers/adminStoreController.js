@@ -1,6 +1,6 @@
 import Order from "../../models/orderModel.js";
 import Store from "../../models/storeModel.js";
-import { totalStoresFunction, getStoreGraphValues } from "../../utils/adminHelpers/totalstores.js";
+import { totalStoresFunction, getStoreGraphValues } from "../../util/adminHelpers/totalstores.js";
 import Payment from "../../models/paymentModel.js";
 
 // Get all stores with essential details

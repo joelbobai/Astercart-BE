@@ -8,9 +8,9 @@ import {
   updateStoreNotifications,
   updateStoreProfile,
 } from "../controllers/storeControllers/storeController.js";
-import { verifyToken } from "../middlewares/verifyToken.js";
-// import validateRequest from "../middlewares/validateRequest.js";
-// import { profileUpdateSchema } from "../utils/validations/storeValidation.js";
+import { verifyToken } from "../middleware/verifyToken.js";
+// import validateRequest from "../middleware/validateRequest.js";
+// import { profileUpdateSchema } from "../util/validations/storeValidation.js";
 import {
   addToCart,
   clearCart,

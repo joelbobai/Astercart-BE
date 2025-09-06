@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import Store from "../models/storeModel.js";
-import sendVerificationEmail from "../utils/mailsender/verificationEmail.js";
+import sendVerificationEmail from "../util/mailsender/verificationEmail.js";
 
 // Signup handler for store
 export const storeSignup = async (req, res) => {
