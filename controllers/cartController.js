@@ -88,7 +88,10 @@ export const updateCart = async (req, res) => {
       return res.status(404).json({ message: "Cart not found." });
     }
 
-    const product = cart.products.id(productId);
+    // Find the cart item by matching the stored productId
+    const product = cart.products.find(
+      (item) => item.productId.toString() === productId
+    );
     if (!product) {
       return res.status(404).json({ message: "Cart item not found." });
     }
