@@ -61,7 +61,7 @@ export const getTopVisitedStores = async (req, res) => {
       { $sort: { totalOrders: -1 } },
       {
         $lookup: {
-          from: "users",
+          from: "stores",
           localField: "_id",
           foreignField: "_id",
           as: "storeDetails",

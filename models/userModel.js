@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     userType: {
       type: String,
-      enum: ["Customer", "Rider", "Store", "Admin"],
+      enum: ["Customer", "Rider", "Admin"],
       required: true,
       index: true,
     },
@@ -43,24 +43,14 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     
-    // Store-specific fields
-    storeDetails: {
-      address: { type: String },
-      state: { type: String },
-      postalCode: { type: String },
-      lga: { type: String },
-    },
-    supportingEmail: { type: String },
-    supportingPhone: { type: String },
+    // Contact fields
     phoneNumber: { type: String },
 
     status: {
       type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
+      enum: ["active", "inactive"],
+      default: "active",
     },
-
-    
 
     // Rider-specific fields
     riderDetails: {

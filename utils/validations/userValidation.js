@@ -37,7 +37,7 @@ export const riderSignupSchema = Joi.object({
 export const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  userType: Joi.string().required(),
+  userType: Joi.string().valid("Customer", "Rider", "Admin").required(),
 });
 
 // ✅ Admin Signup Schema 
@@ -50,4 +50,9 @@ export const adminSignupSchema = Joi.object({
 export const adminLoginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required()
+});
+
+export const storeLoginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
 });

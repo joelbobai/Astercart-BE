@@ -15,6 +15,7 @@ import {
   customerSignupSchema,
   riderSignupSchema,
   loginSchema,
+  storeLoginSchema,
   adminSignupSchema,
   adminLoginSchema,
 } from "../utils/validations/userValidation.js";
@@ -70,7 +71,7 @@ router.post("/resend-verificationcode", resendVerificationCode);
 // Login route
 router.post("/login", validateRequest(loginSchema), login);
 // Login route
-router.post("/store/login", validateRequest(loginSchema), storeLogin);
+router.post("/store/login", validateRequest(storeLoginSchema), storeLogin);
 
 // private_data
 router.get("/private_data", verifyToken, privateData);
