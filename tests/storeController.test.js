@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert';
 import mongoose from 'mongoose';
 
-import { getStoreDetails } from '../controllers/storeControllers/storeController.js';
-import Transaction from '../models/transactionModel.js';
-import Product from '../models/productModel.js';
-import Store from '../models/storeModel.js';
+import { getStoreDetails } from '../src/controllers/storeControllers/storeController.js';
+import Transaction from '../src/models/transactionModel.js';
+import Product from '../src/models/productModel.js';
+import Store from '../src/models/storeModel.js';
 
 test('getStoreDetails returns expected dashboard structure', async () => {
   const storeId = new mongoose.Types.ObjectId();

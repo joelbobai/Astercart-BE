@@ -9,7 +9,7 @@ import {
   login,
   resendVerificationCode,
 } from "../controllers/authController.js";
-import validateRequest from "../middlewares/validateRequest.js";
+import validateRequest from "../middleware/validateRequest.js";
 import {
   storeSignupSchema,
   customerSignupSchema,
@@ -18,7 +18,7 @@ import {
   storeLoginSchema,
   adminSignupSchema,
   adminLoginSchema,
-} from "../utils/validations/userValidation.js";
+} from "../util/validations/userValidation.js";
 import {
   requestOTP,
   resetPassword,
@@ -28,8 +28,8 @@ import {
   requestOtpSchema,
   resetPasswordSchema,
   verifyOtpSchema,
-} from "../utils/validations/passwordResetValidation.js";
-import { verifyToken } from "../middlewares/verifyToken.js";
+} from "../util/validations/passwordResetValidation.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 import {
   cancelTransaction,
   createTransaction,
@@ -39,7 +39,7 @@ import {
   updateTransactionStatus,
 } from "../controllers/storeControllers/createTransaction.controller.js";
 import { createReview } from "../controllers/reviewController.js";
-// import { verifyToken } from "../middlewares/verifyToken.js";
+// import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 

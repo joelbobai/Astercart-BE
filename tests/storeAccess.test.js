@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import storeRoutes from '../routes/storeRoutes.js';
+import storeRoutes from '../src/routes/storeRoutes.js';
 
 // Ensure JWT secret for tests
 process.env.JWT_SECRET = 'testsecret';
