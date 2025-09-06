@@ -18,8 +18,10 @@ export const createProduct = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized: Only store owners can create products" });
     }
 
-    // Use store's ID as storeId
-    const storeId = req.userId;
+
+    // Extract store details
+    const storeId = store._id;
+
 
     // Create the product with the storeId
     const newProduct = new Product({

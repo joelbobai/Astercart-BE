@@ -8,51 +8,60 @@ import Store from "../../models/storeModel.js";
 export const getStoreDetails = async (req, res) => {
   try {
     const { userId: storeId, userType } = req;
-    console.log(storeId);
+    if (userType !== "Store") {
+      return res.status(403).json({ message: "Unauthorized access" });
+    }
 
-    // if (userType !== "Store") {
-    //   return res.status(403).json({ message: "Unauthorized access" });
-    // }
-
-    // Aggregate summary data
-    const summary = await Transaction.aggregate([
-      { $match: { storeId: new mongoose.Types.ObjectId(storeId) } }, // Filter by store ID
+    // Aggregate transaction summary data
+    const transactionSummary = await Transaction.aggregate([
+      { $match: { storeId: new mongoose.Types.ObjectId(storeId) } },
       {
         $group: {
           _id: null,
-          totalTransactions: { $sum: 1 }, // Count total transactions matching the store ID
-          totalStockItems: { $sum: { $sum: "$products.quantity" } }, // Total quantity of items sold
-          totalItemsLeftInStock: { $sum: 0 }, // Placeholder (requires a Product model or other logic)
-          totalItemsOutOfStock: { $sum: 0 }, // Placeholder (requires a Product model or other logic)
-          totalSoldItems: { $sum: { $sum: "$products.quantity" } }, // Total sold items
-          totalOrderSales: { $sum: "$totalAmount" }, // Total sales amount
-          totalFeesCharged: { $sum: "$fee" }, // Total fees collected
-
+          totalTransactions: { $sum: 1 },
+          totalStockItems: { $sum: { $sum: "$products.quantity" } },
+          totalSoldItems: { $sum: { $sum: "$products.quantity" } },
+          totalOrderSales: { $sum: "$totalAmount" },
+          totalFeesCharged: { $sum: "$fee" },
           completedOrders: {
-            $sum: {
-              $cond: [{ $eq: ["$status", "completed"] }, 1, 0],
-            },
+            $sum: { $cond: [{ $eq: ["$status", "completed"] }, 1, 0] },
           },
           pendingOrders: {
-            $sum: {
-              $cond: [{ $eq: ["$status", "pending"] }, 1, 0],
-            },
+            $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] },
           },
           failedOrders: {
-            $sum: {
-              $cond: [{ $eq: ["$status", "failed"] }, 1, 0],
-            },
+            $sum: { $cond: [{ $eq: ["$status", "failed"] }, 1, 0] },
+          },
+        },
+      },
+    ]);
+
+    // Aggregate product inventory data
+    const inventorySummary = await Product.aggregate([
+      { $match: { storeId: new mongoose.Types.ObjectId(storeId) } },
+      {
+        $group: {
+          _id: null,
+          totalItemsLeftInStock: { $sum: "$quantity" },
+          totalItemsOutOfStock: {
+            $sum: { $cond: [{ $eq: ["$quantity", 0] }, 1, 0] },
           },
         },
       },
     ]);
 
     const storeProfile = await Store.findById(storeId).select("-password");
-    // const transactions = await Transaction.find({storeId: new mongoose.Types.ObjectId(storeId)});
+    const transactions = await Transaction.find({
+      storeId: new mongoose.Types.ObjectId(storeId),
+    });
+
+    const { _id: _tId, ...tSummary } = transactionSummary[0] || {};
+    const { _id: _iId, ...iSummary } = inventorySummary[0] || {};
+
     res.json({
-      // summary: summary[0] || {},
+      summary: { ...tSummary, ...iSummary },
       storeProfile: storeProfile || {},
-      // transactions: transactions || [], // Placeholder (requires additional logic to fetch transaction details)
+      transactions: transactions || [],
     });
   } catch (error) {
     console.error(error);
@@ -63,10 +72,12 @@ export const getStoreDetails = async (req, res) => {
 };
 // Get Store Dashboard Data
 export const updateStoreProfile = async (req, res) => {
-  console.log("I Got Here");
-
   try {
     const { userId: storeId, userType } = req;
+    if (userType !== "Store") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
     const {
       phoneNumber,
       password,
@@ -80,10 +91,6 @@ export const updateStoreProfile = async (req, res) => {
       lga,
       profilePhoto,
     } = req.body;
-
-    // if (userType !== "Store") {
-    //   return res.status(403).json({ message: "Forbidden" });
-    // }
 
     const storeProfile = await Store.findById(storeId);
 
@@ -111,7 +118,6 @@ export const updateStoreProfile = async (req, res) => {
       storeProfile.password = hashedPassword;
     }
     const updatedStoreProfile = await storeProfile.save();
-    console.log(updatedStoreProfile);
 
     res.status(200).json({
       message: "Store profile updated successfully",
@@ -127,19 +133,19 @@ export const updateStoreProfile = async (req, res) => {
 
 export const changeStorePassword = async (req, res) => {
   try {
-    const { userId: storeId } = req;
+    const { userId: storeId, userType } = req;
     const { oldPassword, newPassword } = req.body;
+    if (userType !== "Store") {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized: Not a store user" });
+    }
 
     // Check if the user is authenticated
     const storeUser = await Store.findById(storeId);
-
-    // if (storeUser.userType !== "Store") {
-    //   return res
-    //     .status(403)
-    //     .json({ message: "Unauthorized: Not a store user" });
-    // }
-
-    console.log(storeUser);
+    if (!storeUser) {
+      return res.status(404).json({ message: "Store not found" });
+    }
 
     // Check if the old password matches the stored hash
     const isMatch = await bcrypt.compare(oldPassword, storeUser.password);
@@ -162,7 +168,11 @@ export const changeStorePassword = async (req, res) => {
 export const updateStoreNotifications = async (req, res) => {
   try {
     const { notificationPreferences } = req.body;
-    const { userId: storeId } = req;
+    const { userId: storeId, userType } = req;
+
+    if (userType !== "Store") {
+      return res.status(403).json({ message: "Unauthorized access" });
+    }
 
     if (!notificationPreferences) {
       return res.status(400).json({ message: "Invalid request data." });
@@ -187,7 +197,10 @@ export const updateStoreNotifications = async (req, res) => {
 
 export const getStoreProducts = async (req, res) => {
   try {
-    const { userId: storeId } = req;
+    const { userId: storeId, userType } = req;
+    if (userType !== "Store") {
+      return res.status(403).json({ message: "Unauthorized access" });
+    }
     const products = await Product.find({
       storeId: new mongoose.Types.ObjectId(storeId),
     });

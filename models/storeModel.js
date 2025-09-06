@@ -34,12 +34,6 @@ const storeSchema = new mongoose.Schema(
     supportingPhone: { type: String },
     phoneNumber: { type: String },
 
-    status: {
-      type: String,
-      enum: ["active", "inactive"],
-      default: "active",
-    },
-
     // Rider-specific fields
     riderDetails: {
       vehicleType: {

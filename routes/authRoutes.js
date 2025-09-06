@@ -63,7 +63,7 @@ router.post(
 );
 
 // Verify email route
-router.get("/verify-email", verifyEmail);
+router.post("/verify-email", verifyEmail);
 
 // resending email verification route
 router.post("/resend-verificationcode", resendVerificationCode);
