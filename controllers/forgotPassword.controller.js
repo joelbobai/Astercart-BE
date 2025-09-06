@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
 import { generatePassword } from "easy_random_password";
-import { sendOTP } from "../util/mailsender/emails.js";
+import { sendOTP } from "../utils/mailsender/emails.js";
 
 export const requestOTP = async (req, res) => {
   try {

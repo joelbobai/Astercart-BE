@@ -1,5 +1,5 @@
 import Payment from "../../models/paymentModel.js";
-import { totalDashboardFunction } from "../../util/adminHelpers/dashboardstats.js";
+import { totalDashboardFunction } from "../../utils/adminHelpers/dashboardstats.js";
 import Order from "../../models/orderModel.js";
 import Product from "../../models/productModel.js";
 import Review from "../../models/reviewModel.js";
