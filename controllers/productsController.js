@@ -23,7 +23,14 @@ export const createProduct = async (req, res) => {
     const storeId = store._id;
 
 
-    // Create the product with the storeId
+    // Determine next sequential productId
+    const lastProduct = await Product.findOne().sort({ createdAt: -1 });
+    const lastProductId = lastProduct
+      ? parseInt(lastProduct.productId.substring(1))
+      : 0;
+    const productId = `P${String(lastProductId + 1).padStart(3, "0")}`;
+
+    // Create the product with the storeId and generated productId
     const newProduct = new Product({
       name,
       description,
@@ -32,6 +39,7 @@ export const createProduct = async (req, res) => {
       category,
       images,
       storeId, // Associate the product with the store
+      productId,
     });
 
     await newProduct.save();
