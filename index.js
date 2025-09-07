@@ -62,7 +62,7 @@ const generateProductData = (storeIds) => {
       price: 3.5,
       quantity: 100,
       category: "Fruits",
-      image: "https://example.com/images/apples.jpg",
+      images: ["https://example.com/images/apples.jpg"],
       isActive: true,
     },
     {
@@ -72,7 +72,7 @@ const generateProductData = (storeIds) => {
       price: 1.2,
       quantity: 150,
       category: "Fruits",
-      image: "https://example.com/images/bananas.jpg",
+      images: ["https://example.com/images/bananas.jpg"],
       isActive: true,
     },
     {
@@ -82,7 +82,7 @@ const generateProductData = (storeIds) => {
       price: 2.0,
       quantity: 200,
       category: "Vegetables",
-      image: "https://example.com/images/carrots.jpg",
+      images: ["https://example.com/images/carrots.jpg"],
       isActive: true,
     },
     {
@@ -92,7 +92,7 @@ const generateProductData = (storeIds) => {
       price: 1.5,
       quantity: 300,
       category: "Vegetables",
-      image: "https://example.com/images/potatoes.jpg",
+      images: ["https://example.com/images/potatoes.jpg"],
       isActive: true,
     },
   ];

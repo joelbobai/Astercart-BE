@@ -124,7 +124,7 @@ export const getSoldProductsByCategory = async (req, res) => {
             name: product.name,
             category: product.category || "Unknown",
             sold: 0,
-            image: product.image || null,
+            image: (product.images && product.images[0]) || product.image || null,
             total: 0,
           };
         }
@@ -172,7 +172,7 @@ export const getTopReviewedProducts = async (req, res) => {
         category: matchedProduct?.category || "Unknown",
         rating: +review.averageRating.toFixed(1),
         reviewsCount: review.reviewsCount,
-        image: matchedProduct?.image || null,
+        image: matchedProduct?.images?.[0] || null,
       };
     });
 

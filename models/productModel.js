@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema(
     quantity: { type: Number, required: true, min: 0 },
     discount: { type: Number }, // Admin discount (%)
     taxRate: { type: Number },   // Tax rate (%)
-    image: { type: String },
+    images: [{ type: String }],
     isActive: { type: Boolean, default: true },
     adminPrice: { type: Number }, // Final price customer sees (after discount + tax)
     storeName: { type: String },

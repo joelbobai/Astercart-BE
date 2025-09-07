@@ -4,7 +4,7 @@ import Store from '../models/storeModel.js';
 // POST /api/products → Create a new product (Admin/Store)
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, quantity, category, image } = req.body;
+    const { name, description, price, quantity, category, images = [] } = req.body;
 
     if (!name || price === undefined || quantity === undefined) {
       return res.status(400).json({ message: "Name, price, and quantity are required" });
@@ -30,7 +30,7 @@ export const createProduct = async (req, res) => {
       price,
       quantity,
       category,
-      image,
+      images,
       storeId, // Associate the product with the store
     });
 
@@ -66,7 +66,7 @@ export const getProductById = async (req, res) => {
 // PUT /api/products/:id → Update a product (Admin/Store)
 export const updateProduct = async (req, res) => {
   try {
-    const { name, description, price, quantity, category, image, isActive, isFlagged } = req.body;
+    const { name, description, price, quantity, category, images, isActive, isFlagged } = req.body;
 
     const updateData = {
       name,
@@ -74,7 +74,7 @@ export const updateProduct = async (req, res) => {
       price,
       quantity,
       category,
-      image,
+      images,
       isActive,
     };
 
@@ -289,7 +289,7 @@ export const updateProductAsAdmin = async (req, res) => {
       price,
       quantity: req.body.quantity ?? currentProduct.quantity,
       category: req.body.category ?? currentProduct.category,
-      image: req.body.image ?? currentProduct.image,
+      images: req.body.images ?? currentProduct.images,
       isActive: req.body.isActive ?? currentProduct.isActive,
       discount,
       taxRate,

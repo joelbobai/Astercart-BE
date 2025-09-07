@@ -18,7 +18,7 @@ export const getAllOrdersForAdmin = async (req, res) => {
         quantity: p.quantity,
         price: p.price,
         total: p.totalPrice,
-        image: p.image || "", // optional image field if needed
+        image: p.images?.[0] || p.image || "", // optional image field if needed
       }));
 
       const total = order.totalAmount;
