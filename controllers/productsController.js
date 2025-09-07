@@ -4,7 +4,16 @@ import Store from '../models/storeModel.js';
 // POST /api/products → Create a new product (Admin/Store)
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, quantity, category, images = [] } = req.body;
+    const {
+      name,
+      description,
+      price,
+      quantity,
+      category,
+      images = [],
+      discount,
+      taxRate,
+    } = req.body;
 
     if (!name || price === undefined || quantity === undefined) {
       return res.status(400).json({ message: "Name, price, and quantity are required" });
@@ -31,6 +40,8 @@ export const createProduct = async (req, res) => {
       quantity,
       category,
       images,
+      discount,
+      taxRate,
       storeId, // Associate the product with the store
     });
 
