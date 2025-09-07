@@ -12,6 +12,9 @@ test('createProduct persists discount and taxRate', async () => {
   // Mock store lookup
   Store.findById = async () => ({ _id: storeId });
 
+  // Avoid database calls when determining the last product
+  Product.findOne = () => ({ sort: async () => null });
+
   // Capture saved product
   let savedProduct;
   Product.prototype.save = async function () {
